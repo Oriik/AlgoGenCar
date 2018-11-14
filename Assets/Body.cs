@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class car : MonoBehaviour {
+public class Body : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

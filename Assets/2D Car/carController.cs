@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+
 
 public class carController : MonoBehaviour
 {    
@@ -19,9 +19,12 @@ public class carController : MonoBehaviour
     public float fitness =0;
     private float lastFitness;
 
-    private float xStart;
+    public float xStart;
 
     public bool isMoving = true;
+
+    public bool timerStarted = false;
+    public float timer;
 
 
     public void Start()
@@ -30,6 +33,19 @@ public class carController : MonoBehaviour
         lastFitness = fitness;
     }
 
+    public void NotFirstGeneration()
+    {
+        ResetPosition();
+        Body body = GetComponentInChildren<Body>();
+
+        body.transform.localScale = new Vector3(scaleBodyX, scaleBodyY);
+
+        frontwheel.anchor = new Vector2(xFront, frontwheel.connectedBody.transform.localPosition.y);
+        frontwheel.connectedBody.transform.localScale = new Vector3(scaleFront, scaleFront);
+
+        backwheel.connectedBody.transform.localScale = new Vector3(scaleBack, scaleBack);
+        backwheel.anchor = new Vector2(xBack, backwheel.connectedBody.transform.localPosition.y);
+    }
 
     public void FirstGeneration()
     {
@@ -38,10 +54,11 @@ public class carController : MonoBehaviour
          scaleFront = Random.Range(0.5f, 1.2f);
          scaleBack = Random.Range(0.5f, 1.2f);
 
-         scaleBodyX = Random.Range(1.0f, 10.0f);
-         scaleBodyY = Random.Range(1.0f, 10.0f);
+         scaleBodyX = Random.Range(5.0f, 10.0f);
+         scaleBodyY = Random.Range(0.5f, 15.0f);
 
-        transform.localScale = new Vector3(scaleBodyX, scaleBodyY);
+        Body body = GetComponentInChildren<Body>();
+        body.transform.localScale = new Vector3(scaleBodyX, scaleBodyY);
 
         frontwheel.anchor = new Vector2(xFront, frontwheel.connectedBody.transform.localPosition.y);
         frontwheel.connectedBody.transform.localScale = new Vector3(scaleFront, scaleFront);
@@ -130,12 +147,35 @@ public class carController : MonoBehaviour
         backwheel.motor = motorBack;
 
         lastFitness = fitness;
-        fitness = transform.position.x - xStart;
+        fitness = GetComponentInChildren<Body>().transform.localPosition.x - xStart;
 
-        if(lastFitness == fitness)
+        if(lastFitness >= fitness)
         {
-            isMoving = false;
+            if (!timerStarted)
+            {
+                timerStarted = true;
+                timer = 5.0f;
+            }
+            else
+            {
+                timer -= Time.deltaTime;
+                if(timer <= 0.0f)
+                {
+                    isMoving = false;
+                }
+            }
+
         }
+        else
+        {
+            isMoving = true;
+        }
+
+    }
+
+    internal void ResetPosition()
+    {
+        GetComponentInChildren<Body>().transform.localPosition = Vector3.zero;
 
     }
 }

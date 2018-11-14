@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 50463530864676460}
   - component: {fileID: 235528902947883210}
   - component: {fileID: 235485755757484434}
-  - component: {fileID: 114813441703542598}
+  - component: {fileID: 114209887578213308}
   m_Layer: 8
   m_Name: body
   m_TagString: Untagged
@@ -77,9 +77,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4055235958417804}
+  - component: {fileID: 114728117914609852}
   m_Layer: 8
   m_Name: Car
-  m_TagString: Untagged
+  m_TagString: Car
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -91,7 +92,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1914808489262256}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.2, y: -8.42, z: 0}
+  m_LocalPosition: {x: -37.24, y: -8.129913, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4935167060019354}
@@ -296,12 +297,23 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.99999994}
   m_EdgeRadius: 0
---- !u!114 &114813441703542598
+--- !u!114 &114209887578213308
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1199334931972360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c83cfa452a5bc747a9c9d2f68579ab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114728117914609852
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1914808489262256}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 89b2f9b92dc40b347b65ef9ea2184731, type: 3}
@@ -312,6 +324,17 @@ MonoBehaviour:
   speedF: 1000
   torqueF: 10000
   torqueB: 10000
+  xFront: 0
+  xBack: 0
+  scaleFront: 0
+  scaleBack: 0
+  scaleBodyX: 0
+  scaleBodyY: 0
+  fitness: 0
+  xStart: 0
+  isMoving: 1
+  timerStarted: 0
+  timer: 0
 --- !u!212 &212106487844137706
 SpriteRenderer:
   m_ObjectHideFlags: 1
