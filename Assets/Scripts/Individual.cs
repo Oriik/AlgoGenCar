@@ -17,6 +17,7 @@ public class Individual : MonoBehaviour
         }
     }
     private float lastFitness;
+    private float bestFitness;
 
     private CarController carController;
     private float xStart;
@@ -33,15 +34,27 @@ public class Individual : MonoBehaviour
     private bool timerStarted;
     private float timer;
 
-    [HideInInspector] public float xFront, xBack, scaleFront, scaleBack, scaleBodyX, scaleBodyY;
+    private Dna dna;
+    public Dna Dna
+    {
+        get
+        {
+            return dna;
+        }
+    }
 
     public void Start()
     {
+        isMoving = true;
         ResetFitness();
         ResetTimer();
-        isMoving = true;
         carController = GetComponent<CarController>();
         xStart = carController.InitPos.x;
+    }
+
+    private void OnEnable()
+    {
+        isMoving = true;
     }
 
     private void Update()
@@ -50,11 +63,13 @@ public class Individual : MonoBehaviour
         {
             return;
         }
+        if (fitness > bestFitness)
+        {
+            bestFitness = fitness;
+        }
+        fitness = transform.position.x;
 
-        lastFitness = fitness;
-        fitness = transform.position.x - xStart;
-
-        if (Mathf.Abs(lastFitness - fitness) < 0.01f)
+        if (fitness <= bestFitness)
         {
             if (!timerStarted)
             {
@@ -65,7 +80,7 @@ public class Individual : MonoBehaviour
             if (timer <= 0.0f)
             {
                 isMoving = false;
-                carController.StopMotors();
+                gameObject.SetActive(false);
             }
         }
         else
@@ -87,106 +102,56 @@ public class Individual : MonoBehaviour
     {
         fitness = 0;
         lastFitness = fitness;
+        bestFitness = fitness;
     }
 
     public void FirstGeneration()
     {
-        xFront = Random.Range(-0.5f, 0.5f);
-        xBack = Random.Range(-0.5f, 0.5f);
-        scaleFront = Random.Range(0.05f, 0.8f);
-        scaleBack = Random.Range(0.05f, 0.8f);
+        dna = new Dna
+        {
+            xFront = Random.Range(-0.5f, 0.5f),
+            xBack = Random.Range(-0.5f, 0.5f),
+            scaleFront = Random.Range(0.05f, 0.8f),
+            scaleBack = Random.Range(0.05f, 0.8f),
 
-        scaleBodyX = Random.Range(5.0f, 10.0f);
-        scaleBodyY = Random.Range(0.5f, 15.0f);
+            scaleBodyX = Random.Range(5.0f, 10.0f),
+            scaleBodyY = Random.Range(0.5f, 15.0f)
+        };
 
-        body.transform.localScale = new Vector3(scaleBodyX, scaleBodyY);
+        body.transform.localScale = new Vector3(dna.scaleBodyX, dna.scaleBodyY);
 
-        frontwheel.anchor = new Vector2(xFront, frontwheel.connectedBody.transform.localPosition.y);
-        frontwheel.connectedBody.transform.localScale = new Vector3(scaleFront, scaleFront);
+        frontwheel.anchor = new Vector2(dna.xFront, frontwheel.connectedBody.transform.localPosition.y);
+        frontwheel.connectedBody.transform.localScale = new Vector3(dna.scaleFront, dna.scaleFront);
 
-        backwheel.connectedBody.transform.localScale = new Vector3(scaleBack, scaleBack);
-        backwheel.anchor = new Vector2(xBack, backwheel.connectedBody.transform.localPosition.y);
+        backwheel.connectedBody.transform.localScale = new Vector3(dna.scaleBack, dna.scaleBack);
+        backwheel.anchor = new Vector2(dna.xBack, backwheel.connectedBody.transform.localPosition.y);
     }
 
-    public void NotFirstGeneration()
+    public void NotFirstGeneration(Dna newDna)
     {
+        dna = newDna;
         carController = GetComponent<CarController>();
-        carController.Restart();
 
-        body.transform.localScale = new Vector3(scaleBodyX, scaleBodyY);
+        body.transform.localScale = new Vector3(dna.scaleBodyX, dna.scaleBodyY);
 
-        frontwheel.anchor = new Vector2(xFront, frontwheel.connectedBody.transform.localPosition.y);
-        frontwheel.connectedBody.transform.localScale = new Vector3(scaleFront, scaleFront);
+        frontwheel.anchor = new Vector2(dna.xFront, frontwheel.connectedBody.transform.localPosition.y);
+        frontwheel.connectedBody.transform.localScale = new Vector3(dna.scaleFront, dna.scaleFront);
 
-        backwheel.connectedBody.transform.localScale = new Vector3(scaleBack, scaleBack);
-        backwheel.anchor = new Vector2(xBack, backwheel.connectedBody.transform.localPosition.y);
-    }
-
-    public void Hybridation(Individual father, Individual mother)
-    {
-        int rand = Random.Range(0, 1);
-        if (rand == 0)
-        {
-            xFront = father.xFront;
-        }
-        else
-        {
-            xFront = mother.xFront;
-        }
-
-        rand = Random.Range(0, 1);
-        if (rand == 0)
-        {
-            xBack = father.xBack;
-        }
-        else
-        {
-            xBack = mother.xBack;
-        }
-
-        rand = Random.Range(0, 1);
-        if (rand == 0)
-        {
-            scaleFront = father.scaleFront;
-        }
-        else
-        {
-            scaleFront = mother.scaleFront;
-        }
-
-        rand = Random.Range(0, 1);
-        if (rand == 0)
-        {
-            scaleBack = father.scaleBack;
-        }
-        else
-        {
-            scaleBack = mother.scaleBack;
-        }
-
-        rand = Random.Range(0, 1);
-        if (rand == 0)
-        {
-            scaleBodyX = father.scaleBodyX;
-        }
-        else
-        {
-            scaleBodyX = mother.scaleBodyX;
-        }
-
-        rand = Random.Range(0, 1);
-        if (rand == 0)
-        {
-            scaleBodyY = father.scaleBodyY;
-        }
-        else
-        {
-            scaleBodyY = mother.scaleBodyY;
-        }
+        backwheel.connectedBody.transform.localScale = new Vector3(dna.scaleBack, dna.scaleBack);
+        backwheel.anchor = new Vector2(dna.xBack, backwheel.connectedBody.transform.localPosition.y);
     }
 
     public void Mutation()
     {
 
+    }
+
+    public void ReachEndRace()
+    {
+        if (isMoving)
+        {
+            isMoving = false;
+            gameObject.SetActive(false);
+        }
     }
 }

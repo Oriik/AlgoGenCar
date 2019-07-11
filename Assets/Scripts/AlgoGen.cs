@@ -12,19 +12,19 @@ public class AlgoGen : MonoBehaviour
     private bool carsMoving = false;
 
     private List<Individual> cars = new List<Individual>();
-    private List<Individual> carsChildTemp = new List<Individual>();
+    private List<Dna> childDna = new List<Dna>();
 
     private void Start()
     {
         for (int i = 0; i < populationSize; i++)
-        {
+        {           
             GameObject go = Instantiate(prefabCar, transform.position, Quaternion.identity);
             Individual car = go.GetComponent<Individual>();
             car.FirstGeneration();
             cars.Add(car);
         }
     }
-
+     
     private void Update()
     {
         carsMoving = false;
@@ -33,7 +33,7 @@ public class AlgoGen : MonoBehaviour
             carsMoving = carsMoving || car.IsMoving;
         }
 
-        if (!carsMoving)
+        if (!carsMoving && numGenMax > numGen)
         {
             NewGeneration();
         }
@@ -41,22 +41,25 @@ public class AlgoGen : MonoBehaviour
 
     private void NewGeneration()
     {
+        numGen++;
         Selection();
         Hybridation();
         Mutation();
-        numGen++;
 
-        for (int i = 0; i < carsChildTemp.Count; i++)
+        foreach (Individual car in cars)
         {
+            car.GetComponent<CarController>().Restart();
+        }
+
+        for (int i = 0; i < childDna.Count; i++)
+        {
+
             GameObject go = Instantiate(prefabCar, transform.position, Quaternion.identity);
-            SetCar(go.GetComponent<Individual>(), carsChildTemp[i]);
+            go.name = "Child " + i + "_gen " + numGen;
+            go.GetComponent<Individual>().NotFirstGeneration(childDna[i]);
+            cars.Add(go.GetComponent<Individual>());
         }
 
-        GameObject[] individual = GameObject.FindGameObjectsWithTag("Car");
-        for (int i = 0; i < individual.Length; i++)
-        {
-            individual[i].GetComponent<CarController>().Restart();
-        }
     }
 
     private void Selection()
@@ -94,19 +97,19 @@ public class AlgoGen : MonoBehaviour
 
     private void Hybridation()
     {
-        carsChildTemp.Clear();
-        while (carsChildTemp.Count + cars.Count < populationSize)
+        childDna.Clear();
+        while (childDna.Count + cars.Count < populationSize)
         {
-            Individual car = new Individual();
-            int father = Random.Range(0, populationSize / 2);
+            Dna dna = new Dna();
+            int father = Random.Range(0, cars.Count);
             int mother;
             do
             {
-                mother = Random.Range(0, populationSize / 2);
+                mother = Random.Range(0, cars.Count);
             } while (mother == father);
-            car.Hybridation(cars[father], cars[mother]);
+            dna.Hybridation(cars[father].Dna, cars[mother].Dna);
 
-            carsChildTemp.Add(car);
+            childDna.Add(dna);
         }
     }
 
@@ -119,19 +122,5 @@ public class AlgoGen : MonoBehaviour
                 c.Mutation();
             }
         }
-    }
-
-    private void SetCar(Individual carToSet, Individual setter)
-    {
-        carToSet.xFront = setter.xFront;
-        carToSet.xBack = setter.xBack;
-        carToSet.scaleFront = setter.scaleFront;
-        carToSet.scaleBack = setter.scaleBack;
-        carToSet.scaleBodyX = setter.scaleBodyX;
-        carToSet.scaleBodyY = setter.scaleBodyY;
-
-        carToSet.NotFirstGeneration();
-
-        cars.Add(carToSet);
     }
 }

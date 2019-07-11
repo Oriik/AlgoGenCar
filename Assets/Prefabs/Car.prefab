@@ -351,11 +351,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4055235958417804}
+  - component: {fileID: 6354308509200186170}
   - component: {fileID: 3641535818852339621}
   - component: {fileID: 4596833597171928537}
   - component: {fileID: 7676071432243977345}
   - component: {fileID: 8984028228662313437}
-  - component: {fileID: 6354308509200186170}
   m_Layer: 8
   m_Name: Car
   m_TagString: Car
@@ -380,6 +380,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6354308509200186170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1914808489262256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f8d050557aa8c04d8a8c161cfe2a551, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeBeforeStop: 5
+  body: {fileID: 1199334931972360}
+  frontwheel: {fileID: 7676071432243977345}
+  backwheel: {fileID: 8984028228662313437}
 --- !u!114 &3641535818852339621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -437,7 +453,7 @@ WheelJoint2D:
     m_DampingRatio: 0.7
     m_Frequency: 10
     m_Angle: 90
-  m_UseMotor: 0
+  m_UseMotor: 1
   m_Motor:
     m_MotorSpeed: 0
     m_MaximumMotorForce: 10000
@@ -461,29 +477,7 @@ WheelJoint2D:
     m_DampingRatio: 0.7
     m_Frequency: 10
     m_Angle: 90
-  m_UseMotor: 0
+  m_UseMotor: 1
   m_Motor:
     m_MotorSpeed: 0
     m_MaximumMotorForce: 10000
---- !u!114 &6354308509200186170
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1914808489262256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f8d050557aa8c04d8a8c161cfe2a551, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeBeforeStop: 2.5
-  body: {fileID: 1199334931972360}
-  frontwheel: {fileID: 7676071432243977345}
-  backwheel: {fileID: 8984028228662313437}
-  xFront: 0
-  xBack: 0
-  scaleFront: 0
-  scaleBack: 0
-  scaleBodyX: 0
-  scaleBodyY: 0

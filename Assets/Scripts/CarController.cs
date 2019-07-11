@@ -39,13 +39,8 @@ public class CarController : MonoBehaviour
 
     public void Restart()
     {
+        gameObject.SetActive(true);
         transform.position = initPos;
         InitMotors();
-    }
-
-    public void StopMotors()
-    {
-        motorFront.motorSpeed = 0;
-        motorBack.motorSpeed = 0;
-    }
+    }    
 }
