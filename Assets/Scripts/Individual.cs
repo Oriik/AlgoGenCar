@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(CarController))]
-public class Individual : MonoBehaviour
+public class Individual : MonoBehaviour, IComparable
 {
     [SerializeField] private float timeBeforeStop = 5f;
     [SerializeField] private GameObject body;
@@ -9,15 +11,14 @@ public class Individual : MonoBehaviour
     [SerializeField] private WheelJoint2D backwheel;
 
     private float fitness;
-    public float Fitness
+    private float bestFitness;
+    public float BestFitness
     {
         get
         {
-            return fitness;
+            return bestFitness;
         }
     }
-    private float lastFitness;
-    private float bestFitness;
 
     private CarController carController;
     private float xStart;
@@ -101,7 +102,6 @@ public class Individual : MonoBehaviour
     private void ResetFitness()
     {
         fitness = 0;
-        lastFitness = fitness;
         bestFitness = fitness;
     }
 
@@ -152,6 +152,20 @@ public class Individual : MonoBehaviour
         {
             isMoving = false;
             gameObject.SetActive(false);
+        }
+    }
+
+    public int CompareTo(object obj)
+    {
+        if (obj == null) return 1;
+        Individual indiv = obj as Individual;
+        if(indiv != null)
+        {
+            return bestFitness.CompareTo(indiv.BestFitness);
+        }
+        else
+        {
+            throw new ArgumentException("Object is not an Individual");
         }
     }
 }

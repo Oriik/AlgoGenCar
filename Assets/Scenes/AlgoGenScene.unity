@@ -510,7 +510,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabCar: {fileID: 1914808489262256, guid: 09cb3ff1df87e8047971e4797023bd19, type: 3}
   populationSize: 100
-  numGenMax: 5
+  numGenMax: 20
 --- !u!4 &902197981
 Transform:
   m_ObjectHideFlags: 0

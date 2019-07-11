@@ -64,26 +64,9 @@ public class AlgoGen : MonoBehaviour
 
     private void Selection()
     {
-        List<Individual> bestCars = new List<Individual>();
-        foreach (Individual c in cars)
-        {
-            bestCars.Add(c);
-            if (bestCars.Count > populationSize / 2)
-            {
-                float minFitness = float.MaxValue;
-                Individual worst = null;
-                foreach (Individual temp in bestCars)
-                {
-                    if (temp.Fitness <= minFitness)
-                    {
-                        worst = temp;
-                        minFitness = worst.Fitness;
-                    }
-                }
-                bestCars.Remove(worst);
-            }
-        }
-        cars = bestCars;
+        cars.Sort();
+        
+        cars.RemoveRange(0, cars.Count / 2);
 
         foreach (GameObject item in GameObject.FindGameObjectsWithTag("Car"))
         {
