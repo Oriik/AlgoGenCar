@@ -73,7 +73,7 @@ public class Individual : MonoBehaviour, IComparable
         }
         fitness = transform.position.x;
 
-        if (fitness <= bestFitness)
+        if (Mathf.RoundToInt(fitness) <= bestFitness)
         {
             if (!timerStarted)
             {
@@ -166,7 +166,7 @@ public class Individual : MonoBehaviour, IComparable
         {         
             if(bestFitness == indiv.bestFitness)
             {
-                return bestFitnessTime.CompareTo(indiv.BestFitnessTime);
+                return indiv.BestFitnessTime.CompareTo(bestFitnessTime);
             }            
             return bestFitness.CompareTo(indiv.BestFitness);
         }
