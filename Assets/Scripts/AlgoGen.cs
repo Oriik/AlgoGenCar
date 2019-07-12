@@ -65,7 +65,11 @@ public class AlgoGen : MonoBehaviour
     private void Selection()
     {
         cars.Sort();
-        
+
+        for (int i = 0; i < cars.Count; i++)
+        {
+            Debug.Log("Cars " + i + ", best fitness = " + cars[i].BestFitness);
+        }
         cars.RemoveRange(0, cars.Count / 2);
 
         foreach (GameObject item in GameObject.FindGameObjectsWithTag("Car"))

@@ -11,18 +11,22 @@ public class Individual : MonoBehaviour, IComparable
     [SerializeField] private WheelJoint2D backwheel;
 
     private float fitness;
-    private float bestFitness;
-    public float BestFitness
+    private int bestFitness;
+    public int BestFitness
     {
         get
         {
             return bestFitness;
         }
     }
-
-    private CarController carController;
-    private float xStart;
-
+    private float bestFitnessTime;
+    public float BestFitnessTime
+    {
+        get
+        {
+            return bestFitnessTime;
+        }
+    }
     private bool isMoving;
     public bool IsMoving
     {
@@ -48,9 +52,7 @@ public class Individual : MonoBehaviour, IComparable
     {
         isMoving = true;
         ResetFitness();
-        ResetTimer();
-        carController = GetComponent<CarController>();
-        xStart = carController.InitPos.x;
+        ResetTimer();     
     }
 
     private void OnEnable()
@@ -64,9 +66,10 @@ public class Individual : MonoBehaviour, IComparable
         {
             return;
         }
-        if (fitness > bestFitness)
+        if (Mathf.RoundToInt(fitness) > bestFitness)
         {
-            bestFitness = fitness;
+            bestFitness = Mathf.RoundToInt(fitness);
+            bestFitnessTime = Time.time;
         }
         fitness = transform.position.x;
 
@@ -102,7 +105,7 @@ public class Individual : MonoBehaviour, IComparable
     private void ResetFitness()
     {
         fitness = 0;
-        bestFitness = fitness;
+        bestFitness = 0;
     }
 
     public void FirstGeneration()
@@ -130,7 +133,6 @@ public class Individual : MonoBehaviour, IComparable
     public void NotFirstGeneration(Dna newDna)
     {
         dna = newDna;
-        carController = GetComponent<CarController>();
 
         body.transform.localScale = new Vector3(dna.scaleBodyX, dna.scaleBodyY);
 
@@ -146,11 +148,12 @@ public class Individual : MonoBehaviour, IComparable
 
     }
 
-    public void ReachEndRace()
+    public void ReachEndRace(Vector2 endPoint)
     {
         if (isMoving)
         {
             isMoving = false;
+            bestFitness = Mathf.RoundToInt(endPoint.x);
             gameObject.SetActive(false);
         }
     }
@@ -160,7 +163,11 @@ public class Individual : MonoBehaviour, IComparable
         if (obj == null) return 1;
         Individual indiv = obj as Individual;
         if(indiv != null)
-        {
+        {         
+            if(bestFitness == indiv.bestFitness)
+            {
+                return bestFitnessTime.CompareTo(indiv.BestFitnessTime);
+            }            
             return bestFitness.CompareTo(indiv.BestFitness);
         }
         else
